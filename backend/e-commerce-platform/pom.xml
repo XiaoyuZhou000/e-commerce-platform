@@ -66,6 +66,14 @@
       <version>5.9.3</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- Lombok for reducing boilerplate code -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.30</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
