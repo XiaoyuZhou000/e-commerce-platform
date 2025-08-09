@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 public class ProductController {
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
@@ -34,11 +35,14 @@ public class ProductController {
             if ("GET".equals(httpMethod)) {
                 if ("/api/products".equals(path)) {
                     return getAllProducts();
-                } else if (path.startsWith("/api/product/")) {
-                    String productIdStr = path.substring("/api/product/".length());
-                    Integer productID = Integer.parseInt(productIdStr);
-                    return getProductById(productID);
-                }
+                } 
+                // else if (path.startsWith("/api/product/")) {
+                //     String productIdStr = path.substring("/api/product/".length());
+                //     Integer productID = Integer.parseInt(productIdStr);
+                //     return getProductById(productID);
+                // }
+            } else if ("POST".equals(httpMethod) && "/api/product/id".equals(path)) {
+                return getProductsByIds(request);
             }
             
             return createErrorResponse(404, "Endpoint not found");
@@ -60,20 +64,37 @@ public class ProductController {
             return createErrorResponse(500, "Error retrieving products");
         }
     }
-    
-    private APIGatewayProxyResponseEvent getProductById(Integer productID) {
+
+    private APIGatewayProxyResponseEvent getProductsByIds(APIGatewayProxyRequestEvent request) {
         try {
-            Product product = productService.getProductById(productID);
-            
-            if (product == null) {
+            String requestBody = request.getBody();
+            if (requestBody == null || requestBody.trim().isEmpty()) {
+                return createErrorResponse(400, "Request body is required");
+            }
+            ProductRequest[] productRequests = objectMapper.readValue(requestBody, ProductRequest[].class);
+            if (productRequests == null || productRequests.length == 0) {
+                return createErrorResponse(400, "At least one Product ID is required");
+            }
+
+            List<Product> foundProducts = new ArrayList<>();
+            for (ProductRequest pr : productRequests) {
+                if (pr == null || pr.getProductID() == null) {
+                    return createErrorResponse(400, "Product ID is required");
+                }
+                Product product = productService.getProductById(pr.getProductID());
+                if (product != null) {
+                    foundProducts.add(product);
+                }
+            }
+
+            if (foundProducts.isEmpty()) {
                 return createErrorResponse(404, "Product not found");
             }
-            
-            String responseBody = objectMapper.writeValueAsString(product);
+
+            String responseBody = objectMapper.writeValueAsString(foundProducts);
             return createSuccessResponse(200, responseBody);
-            
         } catch (Exception e) {
-            logger.error("Error retrieving product by ID: " + productID, e);
+            logger.error("Error retrieving product(s) by request", e);
             return createErrorResponse(500, "Error retrieving product");
         }
     }
