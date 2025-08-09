@@ -9,22 +9,12 @@ import org.slf4j.LoggerFactory;
 public class DatabaseConnection {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConnection.class);
     
-    // Database configuration - these would be environment variables in production
     private static final String DB_URL = System.getenv("DB_URL") != null ? 
-        System.getenv("DB_URL") : "jdbc:mysql://localhost:3306/ecommerce";
+        System.getenv("DB_URL") : "ecommerceplatformmysql.crs6q8004cg8.us-east-2.rds.amazonaws.com";
     private static final String DB_USER = System.getenv("DB_USER") != null ? 
-        System.getenv("DB_USER") : "root";
+        System.getenv("DB_USER") : "ecommercemysql";
     private static final String DB_PASSWORD = System.getenv("DB_PASSWORD") != null ? 
-        System.getenv("DB_PASSWORD") : "password";
-
-    static {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            logger.error("MySQL JDBC Driver not found", e);
-            throw new RuntimeException("MySQL JDBC Driver not found", e);
-        }
-    }
+        System.getenv("DB_PASSWORD") : "123456789";
 
     public static Connection getConnection() throws SQLException {
         try {
