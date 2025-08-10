@@ -18,7 +18,7 @@ CREATE TABLE Products (
 CREATE TABLE Orders (
     orderID INT AUTO_INCREMENT PRIMARY KEY,
     orderDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('Processing', 'Out for Delivery', 'Delivered') DEFAULT 'Processing',
+    status ENUM('Failed', 'Processing', 'Out for Delivery', 'Delivered') DEFAULT 'Processing',
     grandTotal DECIMAL(10, 2) NOT NULL
 );
 
