@@ -9,12 +9,21 @@ import org.slf4j.LoggerFactory;
 public class DatabaseConnection {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConnection.class);
     
-    private static final String DB_URL = System.getenv("DB_URL") != null ? 
-        System.getenv("DB_URL") : "ecommerceplatformmysql.crs6q8004cg8.us-east-2.rds.amazonaws.com";
-    private static final String DB_USER = System.getenv("DB_USER") != null ? 
-        System.getenv("DB_USER") : "ecommercemysql";
-    private static final String DB_PASSWORD = System.getenv("DB_PASSWORD") != null ? 
-        System.getenv("DB_PASSWORD") : "123456789";
+    private static final String DB_URL = getProperty("DB_URL", "ecommerceplatformmysql.crs6q8004cg8.us-east-2.rds.amazonaws.com");
+    private static final String DB_USER = getProperty("DB_USER", "ecommercemysql");
+    private static final String DB_PASSWORD = getProperty("DB_PASSWORD", "123456789");
+    
+    private static String getProperty(String key, String defaultValue) {
+        String value = System.getProperty(key);
+        if (value != null && !value.trim().isEmpty()) {
+            return value;
+        }
+        value = System.getenv(key);
+        if (value != null && !value.trim().isEmpty()) {
+            return value;
+        }
+        return defaultValue;
+    }
 
     public static Connection getConnection() throws SQLException {
         try {

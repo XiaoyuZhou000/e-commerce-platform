@@ -1,0 +1,83 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: E-commerce Platform Lambda Backend
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    Description: Environment name
+  
+  DatabaseURL:
+    Type: String
+    Default: "ecommerceplatformmysql.crs6q8004cg8.us-east-2.rds.amazonaws.com"
+    Description: RDS database URL
+  
+  DatabaseUser:
+    Type: String
+    Default: "ecommercemysql"
+    Description: Database username
+  
+  DatabasePassword:
+    Type: String
+    NoEcho: true
+    Description: Database password
+  
+  RedisHost:
+    Type: String
+    Default: "cart-lspkld.serverless.use2.cache.amazonaws.com:6379"
+    Description: Redis ElastiCache endpoint
+  
+  RedisPort:
+    Type: Number
+    Default: 6379
+    Description: Redis port
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 512
+    Runtime: java17
+    Environment:
+      Variables:
+        DB_URL: !Ref DatabaseURL
+        DB_USER: !Ref DatabaseUser
+        DB_PASSWORD: !Ref DatabasePassword
+        REDIS_HOST: !Ref RedisHost
+        REDIS_PORT: !Ref RedisPort
+
+Resources:
+  EcommerceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ecommerce-lambda.jar
+      Handler: com.ecommerce.handler.LambdaHandler::handleRequest
+      FunctionName: !Sub "${Environment}-ecommerce-backend"
+      Description: E-commerce platform backend Lambda function
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+      Policies:
+        - VPCAccessPolicy: {}
+        - Statement:
+            - Effect: Allow
+              Action:
+                - rds:DescribeDBInstances
+                - rds:DescribeDBClusters
+              Resource: "*"
+
+
+
+Outputs:
+  ApiUrl:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  
+  LambdaFunction:
+    Description: Lambda Function ARN
+    Value: !GetAtt EcommerceFunction.Arn
+
+

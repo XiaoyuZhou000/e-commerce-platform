@@ -10,10 +10,20 @@ public class RedisConnection {
     private static final Logger logger = LoggerFactory.getLogger(RedisConnection.class);
     private static JedisPool jedisPool;
     
-    private static final String REDIS_HOST = System.getenv("REDIS_HOST") != null ? 
-        System.getenv("REDIS_HOST") : "cart-lspkld.serverless.use2.cache.amazonaws.com:6379";
-    private static final int REDIS_PORT = System.getenv("REDIS_PORT") != null ? 
-        Integer.parseInt(System.getenv("REDIS_PORT")) : 6379;
+    private static final String REDIS_HOST = getProperty("REDIS_HOST", "cart-lspkld.serverless.use2.cache.amazonaws.com:6379");
+    private static final int REDIS_PORT = Integer.parseInt(getProperty("REDIS_PORT", "6379"));
+    
+    private static String getProperty(String key, String defaultValue) {
+        String value = System.getProperty(key);
+        if (value != null && !value.trim().isEmpty()) {
+            return value;
+        }
+        value = System.getenv(key);
+        if (value != null && !value.trim().isEmpty()) {
+            return value;
+        }
+        return defaultValue;
+    }
 
     static {
         try {
