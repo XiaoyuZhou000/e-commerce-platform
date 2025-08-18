@@ -7,7 +7,7 @@ s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-51gtyuih0ayy"
 region = "us-east-2"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-parameter_overrides = "DatabaseURL=\"ecommerceplatformmysql.crs6q8004cg8.us-east-2.rds.amazonaws.com\" DatabaseUser=\"ecommercemysql\" DatabasePassword=\"123456789\" RedisHost=\"cart-lspkld.serverless.use2.cache.amazonaws.com:6379\" RedisPort=\"6379\""
+parameter_overrides = "DatabaseURL=\"jdbc:mysql://ecommerceplatformmysql.crs6q8004cg8.us-east-2.rds.amazonaws.com:3306/ecommerce\" DatabaseUser=\"ecommercemysql\" DatabasePassword=\"123456789\" RedisHost=\"cart-lspkld.serverless.use2.cache.amazonaws.com:6379\" RedisPort=\"6379\""
 image_repositories = []
 s3_prefix = "ecommerce-platform"
 disable_rollback = true

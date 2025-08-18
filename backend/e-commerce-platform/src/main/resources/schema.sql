@@ -1,6 +1,6 @@
-DROP SCHEMA IF EXISTS ECommercePlatform;
-CREATE SCHEMA ECommercePlatform;
-USE ECommercePlatform;
+DROP SCHEMA IF EXISTS ecommerce;
+CREATE SCHEMA ecommerce;
+USE ecommerce;
 
 CREATE TABLE Products (
     productID INT AUTO_INCREMENT PRIMARY KEY,

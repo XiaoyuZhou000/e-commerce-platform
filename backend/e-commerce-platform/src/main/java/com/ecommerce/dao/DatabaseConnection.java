@@ -9,7 +9,8 @@ import org.slf4j.LoggerFactory;
 public class DatabaseConnection {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConnection.class);
     
-    private static final String DB_URL = getProperty("DB_URL", "ecommerceplatformmysql.crs6q8004cg8.us-east-2.rds.amazonaws.com");
+    // private static final String DB_URL = getProperty("DB_URL", "jdbc:mysql://ecommerceplatformmysql.crs6q8004cg8.us-east-2.rds.amazonaws.com:3306/ecommerce");
+    private static final String DB_URL = getProperty("DB_URL", "ecommerceplatformmysql.crs6q8004cg8.us-east-2.rds.amazonaws.com:3306/ecommerce");
     private static final String DB_USER = getProperty("DB_USER", "ecommercemysql");
     private static final String DB_PASSWORD = getProperty("DB_PASSWORD", "123456789");
     

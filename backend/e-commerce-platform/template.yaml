@@ -10,7 +10,7 @@ Parameters:
   
   DatabaseURL:
     Type: String
-    Default: "ecommerceplatformmysql.crs6q8004cg8.us-east-2.rds.amazonaws.com"
+    Default: "jdbc:mysql://ecommerceplatformmysql.crs6q8004cg8.us-east-2.rds.amazonaws.com:3306/ecommerce"
     Description: RDS database URL
   
   DatabaseUser:
@@ -20,6 +20,7 @@ Parameters:
   
   DatabasePassword:
     Type: String
+    Default: "123456789"
     NoEcho: true
     Description: Database password
   
@@ -35,8 +36,8 @@ Parameters:
 
 Globals:
   Function:
-    Timeout: 30
-    MemorySize: 512
+    Timeout: 60
+    MemorySize: 1024
     Runtime: java17
     Environment:
       Variables:
@@ -45,6 +46,7 @@ Globals:
         DB_PASSWORD: !Ref DatabasePassword
         REDIS_HOST: !Ref RedisHost
         REDIS_PORT: !Ref RedisPort
+        JAVA_TOOL_OPTIONS: "-XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication -Xms512m -Xmx1024m"
 
 Resources:
   EcommerceFunction:
@@ -68,8 +70,6 @@ Resources:
                 - rds:DescribeDBInstances
                 - rds:DescribeDBClusters
               Resource: "*"
-
-
 
 Outputs:
   ApiUrl:
