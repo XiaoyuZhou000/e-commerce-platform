@@ -26,8 +26,8 @@ Parameters:
   
   RedisHost:
     Type: String
-    Default: "cart-lspkld.serverless.use2.cache.amazonaws.com:6379"
-    Description: Redis ElastiCache endpoint
+    Default: "cart-lspkld.serverless.use2.cache.amazonaws.com"
+    Description: Redis ElastiCache endpoint (hostname only, port is configured separately)
   
   RedisPort:
     Type: Number

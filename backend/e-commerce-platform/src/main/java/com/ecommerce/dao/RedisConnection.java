@@ -10,7 +10,7 @@ public class RedisConnection {
     private static final Logger logger = LoggerFactory.getLogger(RedisConnection.class);
     private static JedisPool jedisPool;
     
-    private static final String REDIS_HOST = getProperty("REDIS_HOST", "cart-lspkld.serverless.use2.cache.amazonaws.com:6379");
+    private static final String REDIS_HOST = getProperty("REDIS_HOST", "cart-lspkld.serverless.use2.cache.amazonaws.com");
     private static final int REDIS_PORT = Integer.parseInt(getProperty("REDIS_PORT", "6379"));
     
     private static String getProperty(String key, String defaultValue) {
@@ -42,7 +42,16 @@ public class RedisConnection {
             // Enables periodic testing of idle connections in the pool
             poolConfig.setTestWhileIdle(true);
             
-            jedisPool = new JedisPool(poolConfig, REDIS_HOST, REDIS_PORT, 2000);
+            // Connection timeout in milliseconds (10 seconds for AWS ElastiCache)
+            int connectionTimeout = 10000;
+            
+            logger.info("Initializing Redis connection pool to {}:{} with {}ms timeout", REDIS_HOST, REDIS_PORT, connectionTimeout);
+            jedisPool = new JedisPool(poolConfig, REDIS_HOST, REDIS_PORT, connectionTimeout);
+            
+            // Verify the pool was created
+            if (jedisPool == null) {
+                throw new RuntimeException("JedisPool creation returned null");
+            }
             
             logger.info("Redis connection pool initialized successfully");
         } catch (Exception e) {

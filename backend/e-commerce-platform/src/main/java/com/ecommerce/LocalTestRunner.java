@@ -35,6 +35,11 @@ public class LocalTestRunner {
         server.setExecutor(Executors.newFixedThreadPool(10));
         
         server.start();
+        System.out.println("========================================");
+        System.out.println("Local Test Server Started");
+        System.out.println("Server running on: http://localhost:" + PORT);
+        System.out.println("Press Ctrl+C to stop the server");
+        System.out.println("========================================");
     }
     
     static class ApiHandler implements HttpHandler {
